@@ -3,9 +3,9 @@ import { useState, useEffect, useRef } from 'react';
 // ---------------------------------------------------------------------------
 // YouTube API helper
 // ---------------------------------------------------------------------------
-const YT_KEY =
-  (typeof process !== 'undefined' && process.env?.REACT_APP_YOUTUBE_API_KEY) ||
-  null;
+const YT_KEY = import.meta.env.VITE_YOUTUBE_API_KEY || null;
+  //(typeof process !== 'undefined' && process.env?.REACT_APP_YOUTUBE_API_KEY) ||
+  //null;
 
 async function fetchTopVideos(channelId) {
   if (!YT_KEY) return [];
