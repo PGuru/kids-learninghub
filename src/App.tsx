@@ -32,7 +32,16 @@ async function fetchTopVideos(channelId) {
     const plData = await plRes.json();
     if (!plData.items?.length) return [];
     return plData.items
-      .filter(item => item.snippet?.resourceId?.kind === "youtube#video")
+      .filter(item => {
+        const title = item.snippet?.title?.toLowerCase() || "";
+        // Filter out deleted, private, or unavailable placeholders
+        return (
+          item.snippet?.resourceId?.kind === "youtube#video" &&
+          !title.includes("deleted video") &&
+          !title.includes("private video") &&
+          !title.includes("unavailable")
+        );
+      })
       .map(item => ({
         id: item.snippet.resourceId.videoId,
         title: item.snippet.title,
