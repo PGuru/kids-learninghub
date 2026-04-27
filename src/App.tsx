@@ -6,34 +6,45 @@ import { useState, useEffect, useRef } from 'react';
 const YT_KEY = import.meta.env.VITE_YOUTUBE_API_KEY || null;
   //(typeof process !== 'undefined' && process.env?.REACT_APP_YOUTUBE_API_KEY) ||
   //null;
-// Step 1: Get the channel's uploads playlist ID (UC… → UU…)
-function uploadsPlaylistId(channelId) {
-  return "UU" + channelId.slice(2);
-}
-
-// Step 2: Fetch up to 25 videos from the uploads playlist via playlistItems.list
-// Quota cost: 1 unit per call (vs 100 units for search.list)
+// Two-step fetch: resolve exact uploads playlist ID first, then fetch videos.
+// Quota cost: 1 (channels) + 1 (playlistItems) = 2 units total per channel.
 async function fetchTopVideos(channelId) {
   if (!YT_KEY) return [];
   try {
-    const playlistId = uploadsPlaylistId(channelId);
-    const r = await fetch(
+    // Step 1: resolve the verified uploads playlist ID from contentDetails
+    const chRes = await fetch(
+      `https://www.googleapis.com/youtube/v3/channels` +
+      `?key=${YT_KEY}` +
+      `&id=${channelId}` +
+      `&part=contentDetails`
+    );
+    const chData = await chRes.json();
+    const uploadsId = chData?.items?.[0]?.contentDetails?.relatedPlaylists?.uploads;
+    if (!uploadsId) return [];   // channel not found or no uploads playlist
+    // Step 2: fetch up to 25 videos from the verified playlist
+    const plRes = await fetch(
       `https://www.googleapis.com/youtube/v3/playlistItems` +
       `?key=${YT_KEY}` +
-      `&playlistId=${playlistId}` +
+      `&playlistId=${uploadsId}` +
       `&part=snippet` +
       `&maxResults=25`
     );
-    const d = await r.json();
-    if (!d.items?.length) return [];
-    return d.items
+    const plData = await plRes.json();
+    if (!plData.items?.length) return [];
+    return plData.items
       .filter(item => item.snippet?.resourceId?.kind === "youtube#video")
       .map(item => ({
         id: item.snippet.resourceId.videoId,
         title: item.snippet.title,
-        thumb: item.snippet.thumbnails?.medium?.url,
+        // This picks the best available image, or falls back to a standard one
+        thumb: item.snippet.thumbnails?.high?.url || 
+        item.snippet.thumbnails?.medium?.url || 
+        item.snippet.thumbnails?.default?.url ||
+        `https://youtube.com{item.snippet.resourceId.videoId}/0.jpg`,
       }));
-  } catch { return [];
+  } catch (error) {
+    console.error("Fetch failed entirely:", error);
+    return [];
   }
 }
 
@@ -101,7 +112,7 @@ const RAW = {
           videos: [
             'g5f-8QXKjuQ',
             'dLQ0lHpyZd8',
-            'bTJGsBNHgqs',
+            'kSlq08dm89I',
             '9_y3i3_lCiY',
             'zVHBgm9MMJE',
           ],
