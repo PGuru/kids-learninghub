@@ -6,21 +6,34 @@ import { useState, useEffect, useRef } from 'react';
 const YT_KEY = import.meta.env.VITE_YOUTUBE_API_KEY || null;
   //(typeof process !== 'undefined' && process.env?.REACT_APP_YOUTUBE_API_KEY) ||
   //null;
+// Step 1: Get the channel's uploads playlist ID (UC… → UU…)
+function uploadsPlaylistId(channelId) {
+  return "UU" + channelId.slice(2);
+}
 
+// Step 2: Fetch up to 25 videos from the uploads playlist via playlistItems.list
+// Quota cost: 1 unit per call (vs 100 units for search.list)
 async function fetchTopVideos(channelId) {
   if (!YT_KEY) return [];
   try {
+    const playlistId = uploadsPlaylistId(channelId);
     const r = await fetch(
-      `https://www.googleapis.com/youtube/v3/search?key=${YT_KEY}&channelId=${channelId}&part=snippet&order=viewCount&maxResults=5&type=video`
+      `https://www.googleapis.com/youtube/v3/playlistItems` +
+      `?key=${YT_KEY}` +
+      `&playlistId=${playlistId}` +
+      `&part=snippet` +
+      `&maxResults=25`
     );
     const d = await r.json();
-    return (d.items || []).map((v) => ({
-      id: v.id.videoId,
-      title: v.snippet.title,
-      thumb: v.snippet.thumbnails?.medium?.url,
-    }));
-  } catch {
-    return [];
+    if (!d.items?.length) return [];
+    return d.items
+      .filter(item => item.snippet?.resourceId?.kind === "youtube#video")
+      .map(item => ({
+        id: item.snippet.resourceId.videoId,
+        title: item.snippet.title,
+        thumb: item.snippet.thumbnails?.medium?.url,
+      }));
+  } catch { return [];
   }
 }
 
