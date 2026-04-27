@@ -3,13 +3,15 @@ import { useState, useEffect, useRef } from 'react';
 // ---------------------------------------------------------------------------
 // YouTube API helper
 // ---------------------------------------------------------------------------
-const YT_KEY = import.meta.env.VITE_YOUTUBE_API_KEY || null;
+//const YT_KEY = import.meta.env.VITE_YOUTUBE_API_KEY || null;
+const YT_KEY = "AIzaSyBk9DWsMJmoPiVgpLvM7GejZZ230h_KNQw";
   //(typeof process !== 'undefined' && process.env?.REACT_APP_YOUTUBE_API_KEY) ||
   //null;
 // Two-step fetch: resolve exact uploads playlist ID first, then fetch videos.
 // Quota cost: 1 (channels) + 1 (playlistItems) = 2 units total per channel.
 async function fetchTopVideos(channelId) {
   if (!YT_KEY) return [];
+  //console.log("📍 useEffect Insidefetch: ChannelId ID for", channelId);
   try {
     // Step 1: resolve the verified uploads playlist ID from contentDetails
     const chRes = await fetch(
@@ -19,24 +21,32 @@ async function fetchTopVideos(channelId) {
       `&part=contentDetails`
     );
     const chData = await chRes.json();
+    //console.log("📍 useEffect Insidefetch: Channel data response", chData);
     const uploadsId = chData?.items?.[0]?.contentDetails?.relatedPlaylists?.uploads;
+    //console.log("📍 useEffect Insidefetch: Uploads ID for", uploadsId);
     if (!uploadsId) return [];   // channel not found or no uploads playlist
+    // DEBUG 1: Check if we got the Playlist ID
+    //console.log("📍 Step 1: Uploads ID for", channelId, "is", uploadsId);
     // Step 2: fetch up to 25 videos from the verified playlist
     const plRes = await fetch(
       `https://www.googleapis.com/youtube/v3/playlistItems` +
       `?key=${YT_KEY}` +
       `&playlistId=${uploadsId}` +
-      `&part=snippet` +
+      `&part=snippet,status` +
       `&maxResults=25`
     );
     const plData = await plRes.json();
+    // DEBUG 2: See exactly what YouTube sent back before filtering
+    //console.log("📍 Step 2: Raw items from API:", plData.items?.length || 0);
     if (!plData.items?.length) return [];
     return plData.items
       .filter(item => {
         const title = item.snippet?.title?.toLowerCase() || "";
+        const privacy = item.status?.privacyStatus;
         // Filter out deleted, private, or unavailable placeholders
         return (
           item.snippet?.resourceId?.kind === "youtube#video" &&
+          privacy === "public" &&
           !title.includes("deleted video") &&
           !title.includes("private video") &&
           !title.includes("unavailable")
@@ -116,7 +126,7 @@ const RAW = {
       channels: [
         {
           name: 'SciShow Kids',
-          channelId: 'UCnhMTWBx8YNDhFE5M5sRZhA',
+          channelId: 'UCRFIPG2u1DxKLNuE3y2SjHA',
           why: "Answers curious 'why' questions with fun experiments.",
           videos: [
             'g5f-8QXKjuQ',
@@ -128,7 +138,7 @@ const RAW = {
         },
         {
           name: 'Peekaboo Kidz',
-          channelId: 'UCQU5mlFBRSXF8PFh_ZnKcmA',
+          channelId: 'UCxlJ45KjG4XVcQ_hd8j227A',
           why: 'Colorful animated science shorts with sing-along energy.',
           videos: [
             'MBnJhIGKaGY',
@@ -145,7 +155,7 @@ const RAW = {
       channels: [
         {
           name: 'Numberblocks',
-          channelId: 'UCPlwvN0bU9qQCaGIBSG7GmA',
+          channelId: 'UCPlwvN0w4qFSP1FllALB92w',
           why: 'Turns numbers into lovable characters, building real numeracy.',
           videos: [
             'ipSnLSMnDmY',
@@ -157,7 +167,7 @@ const RAW = {
         },
         {
           name: 'Alphablocks',
-          channelId: 'UCsAWBiCQElxUqsGpNsmHQBA',
+          channelId: 'UC_qs3c0ehDvZkbiEbOj6Drg',
           why: 'Letters come alive to teach phonics and early reading.',
           videos: [
             '6Q1nDFKMjS0',
@@ -174,7 +184,7 @@ const RAW = {
       channels: [
         {
           name: 'Sesame Street',
-          channelId: 'UCAcMDLFBKGKQOWiVINr6_OA',
+          channelId: 'UCoookXUzPciGrEZEXmh4Jjg',
           why: 'Decades of research-backed content on empathy and social skills.',
           videos: [
             'tJRFEOmNO7A',
@@ -191,7 +201,7 @@ const RAW = {
       channels: [
         {
           name: 'Kids Learning Tube',
-          channelId: 'UCZOnoLKzoBItcEWIFVSaclA',
+          channelId: 'UC7EFWpvc1wYuUwrtZ_BLi9A',
           why: 'Geography and countries explained through catchy original songs.',
           videos: [
             'p6nylxFWFkQ',
@@ -208,7 +218,7 @@ const RAW = {
       channels: [
         {
           name: 'Art for Kids Hub',
-          channelId: 'UC5XMF3J3680BxqyzOCFkAgQ',
+          channelId: 'UC5XMF3Inoi8R9nSI8ChOsdQ',
           why: 'Dad and kids guide children through drawing step-by-step.',
           videos: [
             'j4wKeaTBQ4A',
@@ -225,7 +235,7 @@ const RAW = {
       channels: [
         {
           name: 'Sesame Street – Money',
-          channelId: 'UCAcMDLFBKGKQOWiVINr6_OA',
+          channelId: 'UCuEgW3r4ytXwd9UfQySv_Nw',
           why: 'Elmo introduces saving, sharing, and the value of money.',
           videos: [
             'hfiXXs7k1h4',
@@ -242,7 +252,7 @@ const RAW = {
       channels: [
         {
           name: 'Blippi',
-          channelId: 'UC9lCOHZlFZeGR8BVCnWvfGg',
+          channelId: 'UC5PYHgAzJ1wLEidB58SK6Xw',
           why: 'Explores how things work — naturally building STEM curiosity.',
           videos: [
             'KvYMuubKJtw',
@@ -259,7 +269,7 @@ const RAW = {
       channels: [
         {
           name: 'Sesame Street – Real vs Pretend',
-          channelId: 'UCAcMDLFBKGKQOWiVINr6_OA',
+          channelId: 'UC0bcaAsU6jN8O9TVuqGCSQQ',
           why: 'Helps children distinguish real from make-believe — core media skill.',
           videos: [
             'P5i1PzEJ2zk',
@@ -276,7 +286,7 @@ const RAW = {
       channels: [
         {
           name: 'Cosmic Kids Yoga',
-          channelId: 'UCnwGOHBBEQ0iBGPsaqNm-qg',
+          channelId: 'UC5uIZ2KOZZeQDQo_Gsi_qbQ',
           why: 'Builds focus and emotional regulation through mindful movement.',
           videos: [
             'L0ykpOEBcEI',
@@ -307,7 +317,7 @@ const RAW = {
         },
         {
           name: 'Peekaboo Kidz',
-          channelId: 'UCQU5mlFBRSXF8PFh_ZnKcmA',
+          channelId: 'UCxlJ45KjG4XVcQ_hd8j227A',
           why: 'Dives into biology, physics, and chemistry with great animation.',
           videos: [
             'MBnJhIGKaGY',
@@ -324,7 +334,7 @@ const RAW = {
       channels: [
         {
           name: 'Mathantics',
-          channelId: 'UCBuMwlP4HMjXXEFGJaXSFjA',
+          channelId: 'UCBuMwlP7kHkNxdPAqtFSJTw',
           why: "Rob's energetic teaching demystifies fractions and geometry.",
           videos: [
             'ZpMKLdRJZgM',
@@ -336,7 +346,7 @@ const RAW = {
         },
         {
           name: 'Homeschool Pop',
-          channelId: 'UCNIfGz9SURHJ-4oQzQgzSmA',
+          channelId: 'UCfPyVJEBD7Di1YYjTdS2v8g',
           why: 'Friendly clear lessons covering multiplication with real-world examples.',
           videos: [
             '2GJ8mgnzNow',
@@ -382,7 +392,7 @@ const RAW = {
         },
         {
           name: 'Homeschool Pop',
-          channelId: 'UCNIfGz9SURHJ-4oQzQgzSmA',
+          channelId: 'UCfPyVJEBD7Di1YYjTdS2v8g',
           why: 'Engaging history lessons on ancient civilisations for primary learners.',
           videos: [
             '2GJ8mgnzNow',
@@ -399,7 +409,7 @@ const RAW = {
       channels: [
         {
           name: 'Art for Kids Hub',
-          channelId: 'UC5XMF3J3680BxqyzOCFkAgQ',
+          channelId: 'UC5XMF3Inoi8R9nSI8ChOsdQ',
           why: 'Hundreds of tutorials that build real artistic technique.',
           videos: [
             'j4wKeaTBQ4A',
@@ -416,7 +426,7 @@ const RAW = {
       channels: [
         {
           name: 'Practical Money Skills for Kids',
-          channelId: 'UCBuMwlP4HMjXXEFGJaXSFjA',
+          channelId: 'UCKCsVSA5THlkHbnkZTPm6-g',
           why: 'Fun stories that build healthy money habits from an early age.',
           videos: [
             'ZpMKLdRJZgM',
@@ -527,7 +537,7 @@ const RAW = {
         },
         {
           name: 'Math Antics',
-          channelId: 'UCBuMwlP4HMjXXEFGJaXSFjA',
+          channelId: 'UCBuMwlP7kHkNxdPAqtFSJTw',
           why: 'Clear lessons on algebra and geometry that make the jump manageable.',
           videos: [
             'ZpMKLdRJZgM',
@@ -1329,8 +1339,11 @@ function VideoCard({ ch, ageAccent, ageLight, onWatched, onMastered }) {
   const mastered = watchedIds.length >= 5 || queue.length === 0;
 
   useEffect(() => {
+    //console.log("🔄 useEffect triggered. Channel ID:", ch.channelId, "Key exists:", !!YT_KEY);
     if (YT_KEY && ch.channelId) {
+      //console.log("🔄 useEffect Channel ID:", ch.channelId, "before calling fetch");
       fetchTopVideos(ch.channelId).then((vids) => {
+        //console.log("🔄 useEffect Channel ID:", ch.channelId, "Vid length:", vids.length);
         if (vids.length) setApiVids(vids.map((v) => v.id));
       });
     }
