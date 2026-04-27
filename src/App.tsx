@@ -3,8 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 // ---------------------------------------------------------------------------
 // YouTube API helper
 // ---------------------------------------------------------------------------
-//const YT_KEY = import.meta.env.VITE_YOUTUBE_API_KEY || null;
-const YT_KEY = "AIzaSyBk9DWsMJmoPiVgpLvM7GejZZ230h_KNQw";
+const YT_KEY = import.meta.env.VITE_YOUTUBE_API_KEY || null;
   //(typeof process !== 'undefined' && process.env?.REACT_APP_YOUTUBE_API_KEY) ||
   //null;
 // Two-step fetch: resolve exact uploads playlist ID first, then fetch videos.
