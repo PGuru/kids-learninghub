@@ -193,6 +193,18 @@ const RAW = {
             '_N_e3UaqMC8',
           ],
         },
+        {
+          name: 'Daniel Tigers Neighbourhood',
+          channelId: 'UCDqgSnRMGVx3dP4sn3ATZMA',
+          why: 'Decades of research-backed content on empathy and social skills.',
+          videos: [
+            'tJRFEOmNO7A',
+            'hfiXXs7k1h4',
+            'P5i1PzEJ2zk',
+            'FSnmvuBJ0V4',
+            '_N_e3UaqMC8',
+          ],
+        },
       ],
     },
     {
@@ -201,6 +213,18 @@ const RAW = {
         {
           name: 'Kids Learning Tube',
           channelId: 'UC7EFWpvc1wYuUwrtZ_BLi9A',
+          why: 'Geography and countries explained through catchy original songs.',
+          videos: [
+            'p6nylxFWFkQ',
+            'mRhfO7IQ6lk',
+            'TN1YMQ2mFaA',
+            'u5j6XqkZFrA',
+            'LLzp9mSZ7qA',
+          ],
+        },
+        {
+          name: 'Nat Geo Kids',
+          channelId: 'UCXVCgDuD_QCkI7gTKU7-tpg',
           why: 'Geography and countries explained through catchy original songs.',
           videos: [
             'p6nylxFWFkQ',
@@ -227,6 +251,18 @@ const RAW = {
             'tGTcFpqQVUI',
           ],
         },
+        {
+          name: 'Cosmic Kids Yoga',
+          channelId: 'UC5uIZ2KOZZeQDQo_Gsi_qbQ',
+          why: 'Dad and kids guide children through drawing step-by-step.',
+          videos: [
+            'j4wKeaTBQ4A',
+            '5VbTDHqNYGE',
+            'oBLBpWe0Rkk',
+            '6A8GVyUABBw',
+            'tGTcFpqQVUI',
+          ],
+        }
       ],
     },
     {
@@ -244,14 +280,38 @@ const RAW = {
             '_N_e3UaqMC8',
           ],
         },
+        {
+          name: 'Hey Duggee Official',
+          channelId: 'UCj_mFUb-47d9QNiJ5556LjQ',
+          why: 'Elmo introduces saving, sharing, and the value of money.',
+          videos: [
+            'hfiXXs7k1h4',
+            'FSnmvuBJ0V4',
+            'tJRFEOmNO7A',
+            'P5i1PzEJ2zk',
+            '_N_e3UaqMC8',
+          ],
+        },
       ],
     },
     {
       category: 'Logic & STEM',
       channels: [
         {
-          name: 'Blippi',
-          channelId: 'UC5PYHgAzJ1wLEidB58SK6Xw',
+          name: 'Simple Learning for kids',
+          channelId: 'UCStMBYkcDWY3oJhMW-f0adA',
+          why: 'Explores how things work — naturally building STEM curiosity.',
+          videos: [
+            'KvYMuubKJtw',
+            '4YZiC_6BKGE',
+            'T-p6Ld3JVMQ',
+            'HpGPy8rl9yU',
+            'YoJK-cEGrF0',
+          ],
+        },
+        {
+          name: 'Learning Mole',
+          channelId: 'UCq2Sm0h2cDmqKtlaonWNUpQ',
           why: 'Explores how things work — naturally building STEM curiosity.',
           videos: [
             'KvYMuubKJtw',
@@ -267,8 +327,20 @@ const RAW = {
       category: 'Media Literacy',
       channels: [
         {
-          name: 'Sesame Street – Real vs Pretend',
-          channelId: 'UC0bcaAsU6jN8O9TVuqGCSQQ',
+          name: 'Common Sense Education',
+          channelId: 'UCu378IVA2__mBS_AO5197FQ',
+          why: 'Helps children distinguish real from make-believe — core media skill.',
+          videos: [
+            'P5i1PzEJ2zk',
+            'tJRFEOmNO7A',
+            'hfiXXs7k1h4',
+            'FSnmvuBJ0V4',
+            '_N_e3UaqMC8',
+          ],
+        },
+        {
+          name: 'PBS Kids',
+          channelId: 'UCrNnk0wFBnCS1awGjq_ijGQ',
           why: 'Helps children distinguish real from make-believe — core media skill.',
           videos: [
             'P5i1PzEJ2zk',
@@ -284,8 +356,8 @@ const RAW = {
       category: 'Soft Skills',
       channels: [
         {
-          name: 'Cosmic Kids Yoga',
-          channelId: 'UC5uIZ2KOZZeQDQo_Gsi_qbQ',
+          name: 'Super Simple Songs',
+          channelId: 'UCLsooMJoIpl_7ux2jvdPB-Q',
           why: 'Builds focus and emotional regulation through mindful movement.',
           videos: [
             'L0ykpOEBcEI',
@@ -312,18 +384,6 @@ const RAW = {
             'H0LHXM8VGhU',
             'qF9oBdKJ76s',
             'Ky3GQbkKFU8',
-          ],
-        },
-        {
-          name: 'Peekaboo Kidz',
-          channelId: 'UCxlJ45KjG4XVcQ_hd8j227A',
-          why: 'Dives into biology, physics, and chemistry with great animation.',
-          videos: [
-            'MBnJhIGKaGY',
-            'v-FjfPpGvk4',
-            'RZgWrHiLJao',
-            'y00Td2yOSV0',
-            'k06bxKaqTUI',
           ],
         },
       ],
@@ -355,6 +415,18 @@ const RAW = {
             'FHy9d9iDiqE',
           ],
         },
+        {
+          name: 'Khan Academy',
+          channelId: 'UC2ri4rEb8abnNwXvTjg5ARw',
+          why: 'Friendly clear lessons covering multiplication with real-world examples.',
+          videos: [
+            '2GJ8mgnzNow',
+            'K2MHXElbA-Y',
+            'oLpAIhgOjhk',
+            'IAbpFvFV-zk',
+            'FHy9d9iDiqE',
+          ],
+        },
       ],
     },
     {
@@ -372,14 +444,26 @@ const RAW = {
             '_q_EzGbMlpk',
           ],
         },
+        {
+          name: 'Bright Side',
+          channelId: 'UC4rlAVgAK0SGk-yTfe48Qpw',
+          why: 'Short animated lessons that spark genuine curiosity and debate.',
+          videos: [
+            'ArAFdR7lkmo',
+            'K9xK1VxMFmc',
+            'yoI7G1tN9qs',
+            'dkNXLKmxhfM',
+            '_q_EzGbMlpk',
+          ],
+        },
       ],
     },
     {
       category: 'History & Geography',
       channels: [
         {
-          name: 'National Geographic Kids',
-          channelId: 'UCXVCgDuD_QCkI7gTKU7-tpg',
+          name: 'Geography Now',
+          channelId: 'UCmmPgObSUPw1HL2lq6H4ffA',
           why: 'World geography and cultures brought to life through expert filmmaking.',
           videos: [
             'JI-eOikJHpk',
@@ -390,8 +474,8 @@ const RAW = {
           ],
         },
         {
-          name: 'Homeschool Pop',
-          channelId: 'UCfPyVJEBD7Di1YYjTdS2v8g',
+          name: 'Simple History',
+          channelId: 'UC510QYlOlKNyhy_zdQxnGYw',
           why: 'Engaging history lessons on ancient civilisations for primary learners.',
           videos: [
             '2GJ8mgnzNow',
@@ -407,8 +491,8 @@ const RAW = {
       category: 'Arts & Creativity',
       channels: [
         {
-          name: 'Art for Kids Hub',
-          channelId: 'UC5XMF3Inoi8R9nSI8ChOsdQ',
+          name: 'Red Ted Art',
+          channelId: 'UCjjRFKvjpU1L1eDmfBWcqig',
           why: 'Hundreds of tutorials that build real artistic technique.',
           videos: [
             'j4wKeaTBQ4A',
@@ -435,6 +519,18 @@ const RAW = {
             'F5DnWdm7Lis',
           ],
         },
+        {
+          name: 'Biz Kids',
+          channelId: 'UCufmiGK0I_9g_iwUR-E8mwA',
+          why: 'Fun stories that build healthy money habits from an early age.',
+          videos: [
+            'ZpMKLdRJZgM',
+            'vgkahOeQdEI',
+            'e5NH7vHlUKc',
+            '_yn_IdbIiUNE',
+            'F5DnWdm7Lis',
+          ],
+        },
       ],
     },
     {
@@ -443,6 +539,30 @@ const RAW = {
         {
           name: 'Code.org',
           channelId: 'UCJyEBMU1xVP2be1-AoGS1BA',
+          why: 'Introduces computational thinking and coding logic through puzzles.',
+          videos: [
+            'FC5FbmsH4fw',
+            'nKIu9yen5nc',
+            'OAx_6-wdslM',
+            'HsXaVV6oFnE',
+            'bQilo5ecSX4',
+          ],
+        },
+        {
+          name: 'Crash Course Kids',
+          channelId: 'UCONtPx56PSebXJOxbFv-2jQ',
+          why: 'Introduces computational thinking and coding logic through puzzles.',
+          videos: [
+            'FC5FbmsH4fw',
+            'nKIu9yen5nc',
+            'OAx_6-wdslM',
+            'HsXaVV6oFnE',
+            'bQilo5ecSX4',
+          ],
+        },
+        {
+          name: 'Tinker nut',
+          channelId: 'UCZDA1kA3y3EIg25BpcHSpwQ',
           why: 'Introduces computational thinking and coding logic through puzzles.',
           videos: [
             'FC5FbmsH4fw',
@@ -475,8 +595,8 @@ const RAW = {
       category: 'Soft Skills',
       channels: [
         {
-          name: 'TED-Ed – Social Skills',
-          channelId: 'UCsooa4yRKGN_zEE8iknghZA',
+          name: 'Charisma on Demand',
+          channelId: 'UCU_W0oE_ock8bWKjALiGs8Q',
           why: 'Short films on communication and empathy children can apply immediately.',
           videos: [
             'ArAFdR7lkmo',
