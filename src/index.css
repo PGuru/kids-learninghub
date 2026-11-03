@@ -1,111 +1,129 @@
+/* ==========================================================================
+   Knowledge Journey — design tokens
+   Sticker-book look: ink outlines + hard offset shadows, no soft grey glows.
+   ========================================================================== */
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  /* Palette */
+  --cloud:   #EEF3FF;  /* page background */
+  --paper:   #FFFFFF;  /* tiles, panels */
+  --ink:     #1D1F45;  /* text, outlines, sticker shadow */
+  --ink-2:   #4A4D78;  /* secondary text */
+  --ink-3:   #8487AE;  /* tertiary text, disabled */
+  --line:    #D5DCF2;  /* quiet dividers */
+  --tangerine: #FF6A2B; /* primary action: "I watched it!" */
+  --sun:     #FFC83A;  /* stars, XP */
+  --grape:   #5B3FFF;  /* links, focus ring, selection */
+  --mint:    #2FBF71;  /* success / mastered */
+  --flame:   #FF4E4E;  /* streak */
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+  /* Per-age accent — overwritten at runtime on <html> via style */
+  --age:       #2563eb;
+  --age-light: #dbeafe;
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
+  /* Type */
+  --font-display: 'Bricolage Grotesque', 'Lexend', system-ui, sans-serif;
+  --font-body:    'Lexend', system-ui, 'Segoe UI', sans-serif;
+  --fs-xs: 0.75rem;   /* 12 */
+  --fs-sm: 0.875rem;  /* 14 */
+  --fs-md: 1rem;      /* 16 */
+  --fs-lg: 1.25rem;   /* 20 */
+  --fs-xl: 1.75rem;   /* 28 */
+  --fs-2xl: 2.5rem;   /* 40 */
+
+  /* Shape — radius scales with hierarchy */
+  --r-sm: 8px;   /* chips, small buttons */
+  --r-md: 14px;  /* thumbnails, tiles */
+  --r-lg: 22px;  /* panels, modals */
+  --r-pill: 999px;
+
+  --outline: 2px solid var(--ink);
+  --sticker: 4px 4px 0 var(--ink);       /* hard offset shadow */
+  --sticker-sm: 2px 2px 0 var(--ink);
+
+  /* Layout */
+  --topbar-h: 64px;
+  --rail-w: 232px;
+  --gutter: 16px;
+
+  --ease-pop: cubic-bezier(.34, 1.56, .64, 1);
+
+  color-scheme: light;
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--ink);
+  background: var(--cloud);
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
+  text-rendering: optimizeLegibility;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
+*, *::before, *::after { box-sizing: border-box; }
 
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
-}
+body { margin: 0; min-height: 100vh; background: var(--cloud); }
 
-#root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-}
-
-body {
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
   margin: 0;
 }
 
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
+p { margin: 0; }
+
+button { font: inherit; color: inherit; cursor: pointer; }
+img { display: block; max-width: 100%; }
+
+:focus-visible {
+  outline: 3px solid var(--grape);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
 }
 
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
+::selection { background: var(--sun); color: var(--ink); }
+
+.visually-hidden {
+  position: absolute !important; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
-p {
-  margin: 0;
-}
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
+/* ==========================================================================
+   Shared primitives — use these instead of re-styling buttons per component
+   ========================================================================== */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 44px; padding: 0 18px;
+  border: var(--outline); border-radius: var(--r-pill);
+  background: var(--paper); color: var(--ink);
+  font-family: var(--font-body); font-weight: 600; font-size: var(--fs-sm);
+  box-shadow: var(--sticker-sm);
+  transition: transform .12s ease, box-shadow .12s ease;
 }
+.btn:hover  { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--ink); }
+.btn:active { transform: translate(2px, 2px);   box-shadow: 0 0 0 var(--ink); }
+.btn:disabled { opacity: .5; cursor: not-allowed; transform: none; box-shadow: var(--sticker-sm); }
+.btn--primary { background: var(--tangerine); color: #fff; }
+.btn--sun     { background: var(--sun); }
+.btn--age     { background: var(--age); color: #fff; }
+.btn--ghost   { border-color: transparent; background: transparent; box-shadow: none; }
+.btn--ghost:hover { background: var(--age-light); box-shadow: none; transform: none; }
+.btn--lg { min-height: 56px; padding: 0 28px; font-size: var(--fs-md); }
+.btn--icon { width: 44px; padding: 0; }
 
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+.chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  height: 36px; padding: 0 14px; white-space: nowrap;
+  border: 1.5px solid var(--line); border-radius: var(--r-sm);
+  background: var(--paper); color: var(--ink);
+  font-size: var(--fs-sm); font-weight: 500;
 }
+.chip:hover { border-color: var(--ink); }
+.chip[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: #fff; }

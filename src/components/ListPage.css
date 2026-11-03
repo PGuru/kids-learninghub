@@ -1,0 +1,23 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  min-width: 0;
+}
+.list__header { display: flex; flex-direction: column; gap: 6px; }
+.list__title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--fs-xl);
+}
+.list__sub { color: var(--ink-2); font-size: var(--fs-sm); }
+.list__group { display: flex; flex-direction: column; gap: 16px; }
+.list__h2 {
+  font-size: var(--fs-lg);
+  padding-bottom: 8px;
+  border-bottom: 1.5px solid var(--line);
+}
+@media (min-width: 1024px) {
+  .list__title { font-size: var(--fs-2xl); }
+}

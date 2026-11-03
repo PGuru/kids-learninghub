@@ -1,0 +1,79 @@
+/* ==========================================================================
+   ChannelPage — header + video grid
+   ========================================================================== */
+.channel {
+  max-width: 1720px;
+  margin: 0 auto;
+  padding: var(--gutter) 0 48px;
+  display: grid; gap: 28px;
+}
+
+.channel__header {
+  display: flex; align-items: center; gap: 24px;
+  padding: 24px;
+  background: var(--paper);
+  border: var(--outline);
+  border-radius: var(--r-lg);
+  box-shadow: var(--sticker);
+}
+.channel__avatar {
+  flex: none;
+  display: grid; place-items: center;
+  width: 128px; height: 128px;
+  border: var(--outline);
+  border-radius: 50%;
+  background: var(--age);
+  color: #fff;
+  box-shadow: var(--sticker-sm);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 4rem;
+  line-height: 1;
+  text-transform: uppercase;
+}
+.channel__head-text { flex: 1; min-width: 0; display: grid; gap: 6px; }
+.channel__name { font-size: clamp(var(--fs-xl), 4vw, var(--fs-2xl)); overflow-wrap: anywhere; }
+.channel__why { color: var(--ink-2); }
+.channel__category { color: var(--ink-3); font-size: var(--fs-sm); font-weight: 600; }
+
+.channel__progress { margin-top: 6px; max-width: 420px; }
+.channel__bar {
+  height: 14px;
+  border: var(--outline);
+  border-radius: var(--r-pill);
+  background: var(--cloud);
+  overflow: hidden;
+}
+.channel__bar-fill { display: block; height: 100%; background: var(--age); }
+.channel__progress-text { margin-top: 4px; font-size: var(--fs-sm); font-weight: 600; color: var(--ink-2); }
+
+.channel__mastered {
+  justify-self: start;
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-top: 4px;
+  padding: 6px 14px;
+  border: var(--outline);
+  border-radius: var(--r-pill);
+  background: var(--sun);
+  box-shadow: var(--sticker-sm);
+  font-weight: 700;
+  font-size: var(--fs-sm);
+}
+
+.channel__refill { color: var(--ink-2); font-weight: 600; }
+
+.channel__section-title { font-size: var(--fs-xl); margin-bottom: 16px; }
+.channel__grid {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; gap: 24px 16px;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
+}
+
+.channel--missing { text-align: center; padding-top: 64px; }
+
+@media (max-width: 600px) {
+  .channel__header { flex-direction: column; text-align: center; padding: 20px 16px; gap: 14px; }
+  .channel__avatar { width: 96px; height: 96px; font-size: 3rem; }
+  .channel__progress { margin-inline: auto; width: 100%; }
+  .channel__mastered { justify-self: center; }
+}

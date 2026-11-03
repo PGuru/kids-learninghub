@@ -1,0 +1,196 @@
+/* ==========================================================================
+   VideoTile: sticker thumbnail + meta. Grid (feed) and row (up next) layouts.
+   ========================================================================== */
+.vtile {
+  position: relative;
+  min-width: 0;
+}
+
+/* ---- Thumbnail ---- */
+.vtile__thumb {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  padding: 0;
+  overflow: hidden;
+  border: var(--outline);
+  border-radius: var(--r-md);
+  background: var(--age-light);
+  box-shadow: var(--sticker);
+  transition: transform .14s ease, box-shadow .14s ease;
+}
+.vtile__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.vtile__thumb:hover,
+.vtile:has(.vtile__title-btn:hover) .vtile__thumb {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--ink);
+}
+.vtile__thumb:active { transform: translate(2px, 2px); box-shadow: var(--sticker-sm); }
+.vtile__thumb:focus-visible { border-radius: var(--r-md); outline-offset: 3px; }
+
+.vtile--watched .vtile__thumb img { opacity: .72; }
+
+/* ---- Badges ---- */
+.vtile__badge {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 9px;
+  border: var(--outline);
+  border-radius: var(--r-pill);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--fs-sm);
+  line-height: 1.4;
+  color: var(--ink);
+  box-shadow: var(--sticker-sm);
+  transform: rotate(-3deg);
+}
+.vtile__badge--stars { background: var(--sun); }
+.vtile__badge--watched {
+  background: var(--mint);
+  color: #fff;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: var(--fs-xs);
+  transform: none;
+}
+
+/* ---- Watch later toggle ---- */
+.vtile__save {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: var(--outline);
+  border-radius: 50%;
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: var(--sticker-sm);
+  opacity: 0;
+  transition: opacity .12s ease, transform .12s ease;
+}
+.vtile:hover .vtile__save,
+.vtile:focus-within .vtile__save,
+.vtile__save--on { opacity: 1; }
+.vtile__save:hover { transform: translate(-1px, -1px); }
+.vtile__save--on { background: var(--sun); }
+.vtile__save:focus-visible { border-radius: 50%; }
+
+@media (hover: none) {
+  .vtile__save { opacity: 1; }
+}
+
+/* ---- Info ---- */
+.vtile__info {
+  display: flex;
+  gap: 12px;
+  padding-top: 14px;
+  min-width: 0;
+}
+.vtile__avatar {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border: var(--outline);
+  border-radius: 50%;
+  background: var(--age-light);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--fs-md);
+  color: var(--ink);
+}
+.vtile__text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  gap: 2px;
+}
+.vtile__title {
+  margin: 0;
+  font-size: var(--fs-md);
+  font-weight: 600;
+  line-height: 1.3;
+}
+.vtile__title-btn {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+.vtile__title-btn:hover { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+
+.vtile__channel {
+  max-width: 100%;
+  min-height: 28px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink-2);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+button.vtile__channel:hover { color: var(--grape); text-decoration: underline; }
+.vtile__channel--static { min-height: 0; display: block; }
+
+.vtile__cat {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--fs-xs);
+  color: var(--ink-2);
+}
+
+/* ---- Row layout (up next lists) ---- */
+.vtile--row {
+  display: grid;
+  grid-template-columns: 168px minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+}
+.vtile--row .vtile__thumb { box-shadow: var(--sticker-sm); }
+.vtile--row .vtile__thumb:hover,
+.vtile--row:has(.vtile__title-btn:hover) .vtile__thumb { box-shadow: 4px 4px 0 var(--ink); }
+.vtile--row .vtile__badge { bottom: 5px; right: 5px; padding: 0 7px; font-size: var(--fs-xs); }
+.vtile--row .vtile__save {
+  top: 4px;
+  left: 128px;
+  right: auto;
+  width: 36px;
+  height: 36px;
+}
+.vtile--row .vtile__info { padding-top: 0; }
+.vtile--row .vtile__title { font-size: var(--fs-sm); }
+
+@media (max-width: 400px) {
+  .vtile--row { grid-template-columns: 136px minmax(0, 1fr); }
+  .vtile--row .vtile__save { left: 96px; }
+}

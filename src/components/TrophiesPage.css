@@ -1,0 +1,161 @@
+/* ==========================================================================
+   TrophiesPage — level, streak, stats, channel badges
+   ========================================================================== */
+.trophies {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--gutter) 0 48px;
+  display: grid; gap: 28px;
+}
+.trophies__title { font-size: var(--fs-2xl); }
+
+.trophies__top {
+  display: grid; gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+}
+
+.trophies__card {
+  padding: 20px;
+  background: var(--paper);
+  border: var(--outline);
+  border-radius: var(--r-lg);
+  box-shadow: var(--sticker);
+}
+.trophies__card-title { font-size: var(--fs-lg); }
+.trophies__note { color: var(--ink-2); font-size: var(--fs-sm); margin-top: 6px; }
+
+/* Level */
+.trophies__level { display: flex; gap: 18px; align-items: center; }
+.trophies__level-badge {
+  flex: none;
+  display: grid; place-items: center;
+  width: 88px; height: 88px;
+  border: var(--outline);
+  border-radius: 50%;
+  background: var(--sun);
+  box-shadow: var(--sticker-sm);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 2.75rem;
+  line-height: 1;
+}
+.trophies__level-body { flex: 1; min-width: 0; }
+.trophies__big {
+  margin-top: 4px;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--fs-xl);
+  line-height: 1.1;
+}
+.trophies__bar {
+  margin-top: 10px;
+  height: 14px;
+  border: var(--outline);
+  border-radius: var(--r-pill);
+  background: var(--cloud);
+  overflow: hidden;
+}
+.trophies__bar-fill {
+  display: block; height: 100%;
+  background: var(--sun);
+  border-right: var(--outline);
+}
+
+/* Streak */
+.trophies__week {
+  list-style: none; margin: 14px 0 0; padding: 0;
+  display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px;
+}
+.trophies__day { display: grid; justify-items: center; gap: 4px; }
+.trophies__dot {
+  display: grid; place-items: center;
+  width: 34px; height: 34px;
+  max-width: 100%; aspect-ratio: 1;
+  border: 2px solid var(--line);
+  border-radius: 50%;
+  background: var(--cloud);
+  font-size: 1rem; line-height: 1;
+}
+.trophies__dot--on { border: var(--outline); background: #FFE3E3; }
+.trophies__dot--today { outline: 2px dashed var(--flame); outline-offset: 2px; }
+.trophies__day-label { font-size: var(--fs-xs); color: var(--ink-2); font-weight: 600; }
+
+/* Stats */
+.trophies__stats { display: flex; gap: 16px; align-items: stretch; }
+.trophies__stat {
+  flex: 1;
+  display: grid; align-content: center; gap: 2px;
+  padding: 12px;
+  border-radius: var(--r-md);
+  background: var(--age-light);
+}
+.trophies__stat-num {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--fs-2xl);
+  line-height: 1;
+}
+.trophies__stat-label { font-size: var(--fs-sm); color: var(--ink-2); font-weight: 600; }
+
+/* Badges */
+.trophies__section-title { font-size: var(--fs-xl); }
+.trophies__grid {
+  list-style: none; margin: 16px 0 0; padding: 0;
+  display: grid; gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+}
+.trophies__badge {
+  width: 100%; height: 100%;
+  min-height: 160px;
+  display: grid; justify-items: center; align-content: start; gap: 8px;
+  padding: 16px 12px;
+  background: var(--paper);
+  border: 2px solid var(--line);
+  border-radius: var(--r-md);
+  color: var(--ink-2);
+  text-align: center;
+  transition: transform .12s ease, border-color .12s ease;
+}
+.trophies__badge:hover { border-color: var(--ink); transform: translateY(-2px); }
+.trophies__badge-avatar {
+  display: grid; place-items: center;
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  border: 2px solid var(--line);
+  background: var(--cloud);
+  color: var(--ink-3);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--fs-xl);
+  text-transform: uppercase;
+}
+.trophies__badge-name { font-weight: 700; font-size: var(--fs-sm); line-height: 1.25; }
+.trophies__badge-meta { font-size: var(--fs-xs); font-weight: 600; }
+.trophies__mini-bar {
+  display: block; width: 80%; height: 6px;
+  border-radius: var(--r-pill);
+  background: var(--line);
+  overflow: hidden;
+}
+.trophies__mini-bar span { display: block; height: 100%; background: var(--ink-3); }
+
+.trophies__badge--won {
+  border: var(--outline);
+  box-shadow: var(--sticker);
+  background: var(--age-light);
+  color: var(--ink);
+}
+.trophies__badge--won:hover { transform: translate(-1px, -3px); box-shadow: 5px 6px 0 var(--ink); }
+.trophies__badge--won .trophies__badge-avatar {
+  border: var(--outline);
+  background: var(--sun);
+  color: var(--ink);
+  font-size: 2rem;
+}
+.trophies__badge--won .trophies__badge-meta { color: var(--ink); }
+
+@media (max-width: 420px) {
+  .trophies__title { font-size: var(--fs-xl); }
+  .trophies__level-badge { width: 68px; height: 68px; font-size: 2.1rem; }
+  .trophies__grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+}
