@@ -1,0 +1,160 @@
+/* Channel manager — a sub-view of the grown-ups dialog (ParentGate). Reuses pgate__ type styles. */
+.cm__head { padding-right: 48px; }
+.cm__back { margin: -8px 0 8px -12px; padding: 0 12px; }
+
+.cm__status:empty { display: none; }
+.cm__status {
+  margin-top: 14px;
+  padding: 10px 12px;
+  background: #E3F7EC;
+  border: 1.5px solid var(--mint); border-radius: var(--r-sm);
+  font-size: var(--fs-sm); font-weight: 600;
+}
+
+/* ------------------------------------------------------------- form */
+.cm__find, .cm__confirm { width: 100%; display: flex; flex-direction: column; gap: 8px; }
+.cm__confirm { gap: 14px; margin-top: 6px; }
+
+.cm__label {
+  display: block;
+  padding: 0;
+  font-weight: 600; font-size: var(--fs-sm);
+}
+.cm__optional { font-weight: 400; color: var(--ink-2); }
+
+.cm__find-row { display: flex; gap: 8px; }
+.cm__find-btn { flex: none; }
+
+.cm__input {
+  width: 100%; min-width: 0; min-height: 44px;
+  padding: 8px 12px;
+  background: var(--paper); color: var(--ink);
+  border: var(--outline); border-radius: var(--r-sm);
+  font: inherit; font-size: var(--fs-md);
+}
+.cm__input::placeholder { color: var(--ink-3); }
+.cm__input:focus-visible { outline: 3px solid var(--grape); outline-offset: 2px; }
+.cm__input[aria-invalid="true"] { border-color: var(--flame); }
+select.cm__input { cursor: pointer; }
+.cm__textarea { resize: vertical; line-height: 1.4; }
+
+.cm__field { width: 100%; display: flex; flex-direction: column; gap: 6px; }
+.cm__fieldset { margin: 0; padding: 0; border: 0; min-width: 0; }
+.cm__fieldset legend { margin-bottom: 6px; }
+
+.cm__ages { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.cm__check {
+  display: flex; align-items: center; gap: 8px;
+  min-height: 44px; padding: 0 10px;
+  border: 1.5px solid var(--line); border-radius: var(--r-sm);
+  font-size: var(--fs-sm); font-weight: 600;
+  cursor: pointer;
+}
+.cm__check:hover { border-color: var(--ink); }
+.cm__check:has(input:checked) { background: var(--age-light); border: var(--outline); }
+.cm__check:has(input:focus-visible) { outline: 3px solid var(--grape); outline-offset: 2px; }
+.cm__check input { width: 18px; height: 18px; margin: 0; accent-color: var(--ink); flex: none; }
+
+.cm__error {
+  width: 100%;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+  padding: 10px 12px;
+  background: #FFE9E9;
+  border: 1.5px solid var(--flame); border-radius: var(--r-sm);
+  font-size: var(--fs-sm);
+}
+.cm__error p { flex: 1 1 200px; }
+
+/* Resolved channel shown for confirmation */
+.cm__found {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px;
+  background: var(--cloud);
+  border: var(--outline); border-radius: var(--r-md);
+  box-shadow: var(--sticker-sm);
+}
+.cm__found-text { min-width: 0; }
+.cm__found-name {
+  font-family: var(--font-display); font-weight: 800; font-size: var(--fs-lg); line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+.cm__found-name:focus { outline: none; }
+.cm__found-name:focus-visible { outline: 3px solid var(--grape); }
+.cm__found-id { overflow-wrap: anywhere; }
+
+.cm__actions { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* ------------------------------------------------------------- list */
+.cm__tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+.cm__tab { height: auto; min-height: 44px; }
+
+.cm__list {
+  width: 100%;
+  margin: 4px 0 0; padding: 0; list-style: none;
+  display: flex; flex-direction: column;
+}
+.cm__row {
+  display: flex; align-items: center; gap: 12px;
+  min-height: 60px; padding: 8px 0;
+  border-bottom: 1.5px solid var(--line);
+}
+.cm__row:last-child { border-bottom: 0; }
+
+.cm__avatar {
+  flex: none;
+  width: 40px; height: 40px;
+  display: grid; place-items: center;
+  border: var(--outline); border-radius: 50%;
+  background: var(--age-light);
+  font-family: var(--font-display); font-weight: 800;
+  object-fit: cover;
+}
+.cm__found .cm__avatar { width: 56px; height: 56px; font-size: var(--fs-lg); }
+
+.cm__row-text { flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 1.3; }
+.cm__row-name { font-weight: 600; overflow-wrap: anywhere; }
+.cm__row-meta {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
+  color: var(--ink-2); font-size: var(--fs-xs);
+}
+.cm__tag {
+  padding: 1px 8px;
+  background: var(--sun);
+  border: 1.5px solid var(--ink); border-radius: var(--r-pill);
+  color: var(--ink); font-weight: 600;
+}
+.cm__row-btn { flex: none; padding: 0 14px; }
+
+/* Inline "are you sure?" that replaces a row */
+.cm__ask {
+  flex: 1;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px;
+  padding: 10px 12px;
+  background: #FFF4D1;
+  border: 1.5px solid var(--sun); border-radius: var(--r-sm);
+}
+.cm__ask-text { flex: 1 1 180px; font-size: var(--fs-sm); font-weight: 600; overflow-wrap: anywhere; }
+.cm__ask-btns { display: flex; gap: 8px; }
+.cm__danger { background: var(--flame); color: #fff; }
+
+.cm__hidden { width: 100%; margin-top: 8px; }
+.cm__summary {
+  display: flex; align-items: center;
+  min-height: 44px;
+  font-weight: 600; font-size: var(--fs-sm);
+  cursor: pointer;
+}
+.cm__summary::before { content: '▸'; margin-right: 8px; transition: transform .12s ease; }
+.cm__hidden[open] > .cm__summary::before { transform: rotate(90deg); }
+.cm__summary::-webkit-details-marker { display: none; }
+.cm__summary { list-style: none; }
+
+@media (max-width: 520px) {
+  .cm__ages { grid-template-columns: repeat(2, 1fr); }
+  .cm__find-row { flex-direction: column; }
+  .cm__find-btn { width: 100%; }
+}
+@media (max-width: 360px) {
+  .cm__row { flex-wrap: wrap; }
+  .cm__row-btn { margin-left: 52px; }
+}

@@ -1,6 +1,4 @@
 import { useMemo } from 'react';
-import type { Channel } from '../types';
-import { AGE_ORDER, CATALOG } from '../data/catalog';
 import { useJourney } from '../state/journey-context';
 import VideoTile from './VideoTile';
 import './ChannelPage.css';
@@ -10,27 +8,20 @@ interface Props {
   onOpen(id: string): void;
 }
 
-function findChannel(channelId: string): { ch: Channel; category: string } | undefined {
-  for (const age of AGE_ORDER) {
-    for (const cat of CATALOG[age]) {
-      const ch = cat.channels.find(c => c.channelId === channelId);
-      if (ch) return { ch, category: cat.category };
-    }
-  }
-  return undefined;
-}
-
 export default function ChannelPage({ channelId, onOpen }: Props) {
   const j = useJourney();
-  const info = findChannel(channelId);
+  // A grown-up hid this channel: treat it as not on the hub
+  const hidden = j.hiddenChannels.includes(channelId);
+  const info = hidden ? undefined : j.channelInfo(channelId);
   const { channelVideos, watched } = j;
 
   const videos = useMemo(() => {
+    if (hidden) return [];
     const all = channelVideos(channelId);
     return [...all.filter(v => !watched.has(v.id)), ...all.filter(v => watched.has(v.id))];
-  }, [channelVideos, channelId, watched]);
+  }, [hidden, channelVideos, channelId, watched]);
 
-  const name = info?.ch.name ?? videos[0]?.channelName;
+  const name = info?.name ?? videos[0]?.channelName;
   if (!name) {
     return (
       <section className="channel channel--missing">
@@ -51,7 +42,7 @@ export default function ChannelPage({ channelId, onOpen }: Props) {
         <span className="channel__avatar" aria-hidden="true">{name.charAt(0)}</span>
         <div className="channel__head-text">
           <h1 className="channel__name">{name}</h1>
-          {info?.ch.why && <p className="channel__why">{info.ch.why}</p>}
+          {info?.why && <p className="channel__why">{info.why}</p>}
           {info?.category && <p className="channel__category">{info.category}</p>}
 
           <div className="channel__progress">

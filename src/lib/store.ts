@@ -23,6 +23,8 @@ export const KEYS = {
   streak:     'kj_streak',   // { count, lastDay: 'YYYY-MM-DD' }
   mastered:   'kj_mastered', // string[] — channelIds whose batch was fully watched
   poolVersion: 'kj_poolVersion', // bump POOL_VERSION in JourneyProvider to force a re-fetch
+  customChannels: 'kj_customChannels', // CustomChannel[] — channels a grown-up added
+  hiddenChannels: 'kj_hiddenChannels', // string[] — curated channelIds hidden in every age group
   bulkDone:   (ageId: string) => `kj_bulkDone_${ageId}`,
   pool:       (chId: string)  => `kj_pool_${chId}`,      // Video[] (legacy: string[])
   nextToken:  (chId: string)  => `kj_nextToken_${chId}`,

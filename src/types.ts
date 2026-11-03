@@ -21,6 +21,17 @@ export interface Category {
   channels: Channel[];
 }
 
+/** A channel a grown-up added from a YouTube link (stored per device) */
+export interface CustomChannel {
+  channelId: string;
+  name: string;
+  why: string;
+  category: string;
+  ageIds: AgeId[];
+  thumb?: string;   // channel avatar URL from the Data API
+  addedAt: number;
+}
+
 export interface Video {
   id: string;
   title: string | null; // null when fetched without an API key (fallback IDs)

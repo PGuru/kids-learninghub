@@ -1,12 +1,12 @@
 import { useMemo, type CSSProperties } from 'react';
-import type { AgeId } from '../types';
-import { CATALOG, ageGroup } from '../data/catalog';
+import type { Category } from '../types';
+import { ageGroup } from '../data/catalog';
 import { useJourney } from '../state/journey-context';
 import './LoadingScreen.css';
 
-function channelsFor(age: AgeId) {
+function channelsIn(categories: Category[]) {
   const seen = new Map<string, string>();
-  CATALOG[age].forEach(cat => cat.channels.forEach(ch => {
+  categories.forEach(cat => cat.channels.forEach(ch => {
     if (!seen.has(ch.channelId)) seen.set(ch.channelId, ch.name);
   }));
   return [...seen].map(([id, name]) => ({ id, name }));
@@ -15,7 +15,9 @@ function channelsFor(age: AgeId) {
 export default function LoadingScreen() {
   const j = useJourney();
   const age = j.loadingAge;
-  const channels = useMemo(() => (age ? channelsFor(age) : []), [age]);
+  const { ageCategories } = j;
+  // Effective channels: the grown-up's hidden ones aren't fetched, added ones are
+  const channels = useMemo(() => (age ? channelsIn(ageCategories(age)) : []), [age, ageCategories]);
 
   if (!age) return <div className="loading" />;
 

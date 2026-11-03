@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import type { FinishResult, Video } from '../types';
-import { AGE_ORDER, CATALOG } from '../data/catalog';
 import { STARS_PER_VIDEO, useJourney } from '../state/journey-context';
 import VideoTile from './VideoTile';
 import FinishCelebration from './FinishCelebration';
@@ -14,16 +13,6 @@ interface Props {
 }
 
 const UP_NEXT_MAX = 12;
-
-function channelWhy(channelId: string): string | undefined {
-  for (const age of AGE_ORDER) {
-    for (const cat of CATALOG[age]) {
-      const ch = cat.channels.find(c => c.channelId === channelId);
-      if (ch) return ch.why;
-    }
-  }
-  return undefined;
-}
 
 /** Same-channel unwatched videos first, then the rest of the feed */
 function buildUpNext(current: Video, sameChannel: Video[], feed: Video[], watched: Set<string>): Video[] {
@@ -46,7 +35,11 @@ export default function WatchPage({ videoId, onOpen, onOpenChannel, onBack }: Pr
   const [celebration, setCelebration] = useState<Celebration | null>(null);
   const [nudge, setNudge] = useState<Video | null>(null);
 
-  const upNext = video ? buildUpNext(video, j.channelVideos(video.channelId), j.feed, j.watched) : [];
+  // A hidden channel's video can still be replayed from history, but nothing more from it is suggested
+  const channelHidden = !!video && j.hiddenChannels.includes(video.channelId);
+  const upNext = video
+    ? buildUpNext(video, channelHidden ? [] : j.channelVideos(video.channelId), j.feed, j.watched)
+    : [];
 
   useEffect(() => { if (nudge) nudgeRef.current?.focus(); }, [nudge]);
 
@@ -66,7 +59,7 @@ export default function WatchPage({ videoId, onOpen, onOpenChannel, onBack }: Pr
   const isWatched = j.watched.has(video.id);
   const isSaved = j.saved.includes(video.id);
   const title = video.title || `A video from ${video.channelName}`;
-  const why = channelWhy(video.channelId);
+  const why = j.channelInfo(video.channelId)?.why;
   const progress = j.channelProgress(video.channelId);
 
   const finish = () => {

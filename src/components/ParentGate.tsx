@@ -1,8 +1,10 @@
-import { useEffect, useId, useRef, useState, type CSSProperties, type ReactNode } from 'react';
+import { useEffect, useId, useMemo, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import type { AgeId } from '../types';
-import { AGE_GROUPS, ageGroup } from '../data/catalog';
+import { AGE_GROUPS, AGE_ORDER, ageGroup } from '../data/catalog';
+import { channelIdsOf } from '../data/effective';
 import { useJourney } from '../state/journey-context';
 import PinPad from './PinPad';
+import ChannelManager from './ChannelManager';
 import './ParentGate.css';
 
 export type ParentGateMode = { kind: 'settings' } | { kind: 'unlock'; age: AgeId };
@@ -12,7 +14,10 @@ interface Props {
   onClose: () => void;
 }
 
-type Step = 'pin' | 'settings' | 'new-pin' | 'confirm-pin';
+type Step = 'pin' | 'settings' | 'channels' | 'new-pin' | 'confirm-pin';
+
+// Steps that show the wide grown-up panel (close button, Escape closes/goes back)
+const isPanelStep = (s: Step) => s === 'settings' || s === 'channels';
 
 const DEFAULT_PIN = '1234';
 const spokenRange = (id: AgeId) => `ages ${id.replace('-', ' to ')}`;
@@ -24,7 +29,7 @@ const spokenRange = (id: AgeId) => `ages ${id.replace('-', ' to ')}`;
 let resumeSettings = false;
 const setResume = (v: boolean) => { resumeSettings = v; };
 
-const FOCUSABLE = 'button:not([disabled]), input:not([disabled]), [href], [tabindex]:not([tabindex="-1"])';
+const FOCUSABLE = 'button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), summary, [href], [tabindex]:not([tabindex="-1"])';
 
 export default function ParentGate({ mode, onClose }: Props) {
   const j = useJourney();
@@ -34,8 +39,18 @@ export default function ParentGate({ mode, onClose }: Props) {
   const [pinChanged, setPinChanged] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
+  const manageBtnRef = useRef<HTMLButtonElement>(null);
+  const fromChannels = useRef(false); // back from the channel manager: refocus its button
   const settingsTitleId = useId();
+  const channelsTitleId = useId();
   const ageHelpId = useId();
+
+  // Distinct channels on the hub across every age group
+  const { ageCategories } = j;
+  const channelCount = useMemo(
+    () => new Set(AGE_ORDER.flatMap(a => channelIdsOf(ageCategories(a)))).size,
+    [ageCategories],
+  );
 
   const close = () => { setResume(false); onClose(); };
   const closeRef = useRef(close);
@@ -53,14 +68,22 @@ export default function ParentGate({ mode, onClose }: Props) {
   }, []);
 
   // Move focus into the settings panel when it appears (PinPad focuses itself)
+  // (ChannelManager focuses its own heading)
   useEffect(() => {
-    if (step === 'settings') headingRef.current?.focus();
+    if (step !== 'settings') return;
+    if (fromChannels.current) { fromChannels.current = false; manageBtnRef.current?.focus(); }
+    else headingRef.current?.focus();
   }, [step]);
 
-  // Escape on the settings panel closes; Tab stays inside the dialog
+  // Escape on the settings panel closes, on the channel manager goes back; Tab stays inside the dialog
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && step === 'settings') { e.preventDefault(); closeRef.current(); return; }
+      if (e.key === 'Escape' && step === 'channels') {
+        // Let an open <select> handle its own Escape
+        if (e.target instanceof HTMLSelectElement) return;
+        e.preventDefault(); fromChannels.current = true; setStep('settings'); return;
+      }
       if (e.key !== 'Tab' || !panelRef.current) return;
       const items = [...panelRef.current.querySelectorAll<HTMLElement>(FOCUSABLE)];
       if (!items.length) return;
@@ -162,6 +185,14 @@ export default function ParentGate({ mode, onClose }: Props) {
         onCancel={() => { setNewPin(''); setStep('settings'); }}
       />
     );
+  } else if (step === 'channels') {
+    label = 'Channels';
+    body = (
+      <ChannelManager
+        titleId={channelsTitleId}
+        onBack={() => { fromChannels.current = true; setStep('settings'); }}
+      />
+    );
   } else {
     label = 'Grown-ups';
     body = (
@@ -199,6 +230,21 @@ export default function ParentGate({ mode, onClose }: Props) {
               </label>
             ))}
           </div>
+        </section>
+
+        <section className="pgate__section" aria-labelledby={`${settingsTitleId}-channels`}>
+          <h3 className="pgate__h3" id={`${settingsTitleId}-channels`}>Channels</h3>
+          <p className="pgate__help">
+            Add a YouTube channel you trust, or hide ones that aren't right for your child.
+          </p>
+          <button
+            ref={manageBtnRef}
+            type="button"
+            className="btn"
+            onClick={() => setStep('channels')}
+          >
+            Manage channels ({channelCount})
+          </button>
         </section>
 
         <section className="pgate__section" aria-labelledby={`${settingsTitleId}-pin`}>
@@ -254,17 +300,18 @@ export default function ParentGate({ mode, onClose }: Props) {
   return (
     <div
       className="pgate"
-      onMouseDown={e => { if (e.target === e.currentTarget) close(); }}
+      // Not while managing channels — a stray click would throw away a half-filled form
+      onMouseDown={e => { if (e.target === e.currentTarget && step !== 'channels') close(); }}
     >
       <div
         ref={panelRef}
-        className={`pgate__panel${step === 'settings' ? ' pgate__panel--wide' : ''}`}
+        className={`pgate__panel${isPanelStep(step) ? ' pgate__panel--wide' : ''}`}
         role="dialog"
         aria-modal="true"
-        aria-label={step === 'settings' ? undefined : label}
-        aria-labelledby={step === 'settings' ? settingsTitleId : undefined}
+        aria-label={isPanelStep(step) ? undefined : label}
+        aria-labelledby={step === 'settings' ? settingsTitleId : step === 'channels' ? channelsTitleId : undefined}
       >
-        {step === 'settings' && (
+        {isPanelStep(step) && (
           <button
             type="button"
             className="btn btn--ghost btn--icon pgate__x"

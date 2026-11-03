@@ -15,8 +15,8 @@ Built with **React 19 + TypeScript + Vite**. It is a client-only single-page app
   | Primary | 7–10 | 🚀 |
   | Middle School | 11–13 | 🔭 |
   | High School | 14–16 | ⚡ |
-- **Nine subject categories**: Science & Tech, Mathematics, Critical Thinking & Life Skills, History & Geography, Arts & Creativity, Financial Literacy, Logic & STEM, Media Literacy, Soft Skills.
-- **Curated channels** for each age and category (e.g. SciShow Kids, Numberblocks, TED-Ed, Khan Academy, Crash Course, 3Blue1Brown, Kurzgesagt), each with a short "why this channel" note.
+- **Subject categories**, for example Science & Tech, Mathematics, Reading & Language, Music & Movement, History & Geography, Arts & Creativity, Financial Literacy, Media Literacy and Soft Skills. Each age group shows only the categories it has channels for.
+- **Researched channel list**: 55 channel entries across the age groups, chosen from parent and teacher recommendations and checked against a set of judging rules. Each has a short "why this channel" note and any caution parents should know about. Every channel ID was verified against YouTube. [docs/channel-curation.md](docs/channel-curation.md) explains how they were picked, what was rejected and why, and the gaps that remain.
 - **YouTube-style browsing**: a sticky top bar with search, a left rail (Home, Keep watching, Watch later, My trophies, age groups), category chips and a thumbnail grid. Thumbnails use a "sticker" look with ink outlines and hard shadows. On phones the rail becomes a drawer.
 - **Watch page**: a large privacy-enhanced (`youtube-nocookie`) player, channel info, and an *Up next* list that starts with the same channel.
 - **Reward loop**: the big **I watched it! +10 ⭐** button sends stars flying into the **star jar** in the top bar, then shows a result card.
@@ -30,6 +30,7 @@ Built with **React 19 + TypeScript + Vite**. It is a client-only single-page app
   - An **age ceiling**: lower age groups can be browsed freely, and higher ones need the PIN.
   - Change the PIN (default **`1234`**).
   - Reset to the first-run age selection screen.
+  - **Manage channels**: add a channel by pasting a YouTube link (`@handle`, `/channel/UC…`, `/user/…`, `/c/…` or any video link), choosing its age groups and category, and confirming the channel found. Built-in channels can be hidden and restored; channels a grown-up added can be removed. Without an API key, only `/channel/UC…` links can be added. Old-style `/c/…` links use a YouTube search, which costs 100 quota units.
 - **Learning tips** for parents, tailored to each age group.
 
 ---
@@ -46,9 +47,9 @@ Built with **React 19 + TypeScript + Vite**. It is a client-only single-page app
 1. `channels?part=contentDetails` finds the channel's **uploads playlist**.
 2. `playlistItems?part=snippet,status&maxResults=25` fetches the videos, continuing from a stored `nextPageToken` when one exists.
 3. The results are filtered to public, non-deleted, English-language videos.
-4. `videos?part=snippet,contentDetails` drops livestreams, upcoming premieres and anything over 1 hour, because a child can't "finish" those.
+4. `videos?part=snippet,contentDetails,player` drops **Shorts** (vertical videos of 3 minutes or less, anything 60 seconds or under, and #shorts titles), livestreams, upcoming premieres and anything over 1 hour, because a child can't "finish" those. If a page of uploads has too few watchable videos, it reads up to 4 pages to find 12.
 
-That is about **3 quota units per channel fetch**.
+That is about **3 quota units per channel fetch**, or up to 9 for channels that post mostly Shorts.
 
 ### Fallback without an API key
 If `VITE_YOUTUBE_API_KEY` isn't set, no API calls are made, and each channel falls back to the 5 hard-coded video IDs in its config.
@@ -65,6 +66,8 @@ If `VITE_YOUTUBE_API_KEY` isn't set, no API calls are made, and each channel fal
 | `kj_stars` | Total stars earned |
 | `kj_streak` | `{ count, lastDay }` for the daily streak |
 | `kj_mastered` | Channel IDs whose batch was fully watched |
+| `kj_customChannels` | Channels a grown-up added (`{ channelId, name, why, category, ageIds, … }`) |
+| `kj_hiddenChannels` | Built-in channel IDs a grown-up hid |
 | `kj_bulkDone_<ageId>` | Whether the initial bulk fetch is done for an age group |
 | `kj_pool_<channelId>` | The cached video-ID pool for a channel |
 | `kj_nextToken_<channelId>` | The YouTube `nextPageToken` for the next batch |
@@ -152,6 +155,8 @@ Components never touch `localStorage` or the API directly. They read and change 
 
 ## Customising the channel list
 
+Parents can add or hide channels on their own device from **🔒 → Manage channels**. To change the built-in list for everyone, edit the catalogue as described below, and record why in [docs/channel-curation.md](docs/channel-curation.md).
+
 Edit the `CATALOG` object in [src/data/catalog.ts](src/data/catalog.ts). Each entry looks like this:
 
 ```ts
@@ -174,7 +179,7 @@ Channels are grouped by `category` under each age key (`'3-6'`, `'7-10'`, `'11-1
 - **The PIN is a convenience lock, not real security.** It is stored in plain text in `localStorage` and can be read or cleared through browser dev tools.
 - **Progress is per browser and per device.** Nothing syncs between devices.
 - **Fallback video IDs** are reused across several channels, and many no longer exist. Tiles for dead videos hide themselves. Without an API key the feed is thin and videos show no titles, so set `VITE_YOUTUBE_API_KEY` for the full experience.
-- **The YouTube API quota** is 10,000 units a day by default. The first load of a large age group uses about 3 units per channel.
+- **The YouTube API quota** is 10,000 units a day by default. The first load of a large age group uses about 3 units per channel, and up to 9 for Shorts-heavy channels.
 
 ---
 
