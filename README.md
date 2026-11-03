@@ -46,8 +46,9 @@ Built with **React 19 + TypeScript + Vite**. It is a client-only single-page app
 1. `channels?part=contentDetails` finds the channel's **uploads playlist**.
 2. `playlistItems?part=snippet,status&maxResults=25` fetches the videos, continuing from a stored `nextPageToken` when one exists.
 3. The results are filtered to public, non-deleted, English-language videos.
+4. `videos?part=snippet,contentDetails` drops livestreams, upcoming premieres and anything over 1 hour, because a child can't "finish" those.
 
-That is about **2 quota units per channel fetch**.
+That is about **3 quota units per channel fetch**.
 
 ### Fallback without an API key
 If `VITE_YOUTUBE_API_KEY` isn't set, no API calls are made, and each channel falls back to the 5 hard-coded video IDs in its config.
@@ -67,6 +68,7 @@ If `VITE_YOUTUBE_API_KEY` isn't set, no API calls are made, and each channel fal
 | `kj_bulkDone_<ageId>` | Whether the initial bulk fetch is done for an age group |
 | `kj_pool_<channelId>` | The cached video-ID pool for a channel |
 | `kj_nextToken_<channelId>` | The YouTube `nextPageToken` for the next batch |
+| `kj_poolVersion` | Cache format version. When it changes, every cached pool is re-fetched once and progress is kept |
 
 To fully reset the app, clear the site's localStorage in your browser's dev tools.
 
@@ -163,7 +165,7 @@ Edit the `CATALOG` object in [src/data/catalog.ts](src/data/catalog.ts). Each en
 
 Channels are grouped by `category` under each age key (`'3-6'`, `'7-10'`, `'11-13'`, `'14-16'`). A new category name also needs an emoji in `CAT_ICONS`.
 
-> Pools are cached per channel. After changing a channel ID, clear the matching `kj_pool_*`, `kj_nextToken_*` and `kj_bulkDone_*` keys to make the app re-fetch.
+> Pools are cached per channel. To make every device re-fetch after changing the catalogue or the filtering, bump `POOL_VERSION` in `src/state/JourneyProvider.tsx`.
 
 ---
 
@@ -172,7 +174,7 @@ Channels are grouped by `category` under each age key (`'3-6'`, `'7-10'`, `'11-1
 - **The PIN is a convenience lock, not real security.** It is stored in plain text in `localStorage` and can be read or cleared through browser dev tools.
 - **Progress is per browser and per device.** Nothing syncs between devices.
 - **Fallback video IDs** are reused across several channels, and many no longer exist. Tiles for dead videos hide themselves. Without an API key the feed is thin and videos show no titles, so set `VITE_YOUTUBE_API_KEY` for the full experience.
-- **The YouTube API quota** is 10,000 units a day by default. The first load of a large age group uses about 2 units per channel.
+- **The YouTube API quota** is 10,000 units a day by default. The first load of a large age group uses about 3 units per channel.
 
 ---
 

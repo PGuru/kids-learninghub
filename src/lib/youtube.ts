@@ -18,9 +18,47 @@ interface PlaylistItem {
   status?: { privacyStatus?: string };
 }
 
+// Longest video we show; filters out recorded 24h streams and full-length marathons
+const MAX_SECONDS = 60 * 60;
+
+// ISO 8601 duration ("PT1H2M3S") -> seconds
+function isoSeconds(iso = ''): number {
+  const m = iso.match(/P(?:(\d+)D)?T?(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+  if (!m) return 0;
+  const [, d, h, min, s] = m.map(Number);
+  return (d || 0) * 86400 + (h || 0) * 3600 + (min || 0) * 60 + (s || 0);
+}
+
+/**
+ * Drop livestreams, upcoming premieres/streams and videos over an hour — a kid can't
+ * "finish" those. playlistItems doesn't say, so look them up via videos.list (1 unit).
+ * On failure the list is returned unfiltered.
+ */
+async function dropLiveAndLong(videos: FetchedVideo[]): Promise<FetchedVideo[]> {
+  if (!videos.length || !YT_KEY) return videos;
+  try {
+    const params = new URLSearchParams({ key: YT_KEY, id: videos.map(v => v.id).join(','), part: 'snippet,contentDetails' });
+    const res  = await fetch(`https://www.googleapis.com/youtube/v3/videos?${params}`);
+    const data = await res.json();
+    if (!Array.isArray(data.items)) return videos;
+    const ok = new Set<string>(
+      data.items
+        .filter((v: { snippet?: { liveBroadcastContent?: string }; contentDetails?: { duration?: string } }) => {
+          const secs = isoSeconds(v.contentDetails?.duration);
+          return (v.snippet?.liveBroadcastContent ?? 'none') === 'none' && secs > 0 && secs <= MAX_SECONDS;
+        })
+        .map((v: { id: string }) => v.id),
+    );
+    return videos.filter(v => ok.has(v.id));
+  } catch (e) {
+    console.error('dropLiveAndLong:', e);
+    return videos;
+  }
+}
+
 /**
  * Fetch up to 25 videos for one channel via its uploads playlist.
- * Pass pageToken to resume where the last batch ended. Quota: 2 units per call.
+ * Pass pageToken to resume where the last batch ended. Quota: 3 units per call.
  */
 export async function fetchChannelVideos(channelId: string, pageToken = ''): Promise<{ videos: FetchedVideo[]; nextPageToken: string }> {
   const empty = { videos: [], nextPageToken: '' };
@@ -55,7 +93,7 @@ export async function fetchChannelVideos(channelId: string, pageToken = ''): Pro
         };
       });
 
-    return { videos, nextPageToken: plData.nextPageToken || '' };
+    return { videos: await dropLiveAndLong(videos), nextPageToken: plData.nextPageToken || '' };
   } catch (e) {
     console.error('fetchChannelVideos:', e);
     return empty;

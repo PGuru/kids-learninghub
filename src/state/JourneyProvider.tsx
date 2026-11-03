@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import type { AgeId, Channel, FinishResult, Video } from '../types';
 import { AGE_ORDER, CATALOG, allChannelIds, ageIndex } from '../data/catalog';
 import { KEYS, store } from '../lib/store';
@@ -33,7 +33,18 @@ function channelIndex(age: AgeId) {
   return map;
 }
 
+// v2: pools are filtered for livestreams and >1h videos. Older caches are dropped once so they
+// re-fetch; watched/stars/history are untouched.
+const POOL_VERSION = 2;
+
 function initialPools(): Record<string, Pool> {
+  if (store.get<number>(KEYS.poolVersion) !== POOL_VERSION) {
+    AGE_ORDER.forEach(age => {
+      store.remove(KEYS.bulkDone(age));
+      allChannelIds(age).forEach(chId => { store.remove(KEYS.pool(chId)); store.remove(KEYS.nextToken(chId)); });
+    });
+    store.set(KEYS.poolVersion, POOL_VERSION);
+  }
   const pools: Record<string, Pool> = {};
   AGE_ORDER.forEach(age => allChannelIds(age).forEach(chId => {
     const p = readPool(chId);
@@ -123,6 +134,14 @@ export function JourneyProvider({ children }: { children: ReactNode }) {
     store.set(KEYS.bulkDone(age), true);
     setLoadingAge(null);
   }, []);
+
+  // Make sure the age being viewed has been fetched — covers browsing down to a never-fetched
+  // age and the one-time re-fetch after a POOL_VERSION bump
+  useEffect(() => {
+    if (!viewingAge || store.get(KEYS.bulkDone(viewingAge))) return;
+    const t = setTimeout(() => void bulkFetch(viewingAge)); // cancelled on cleanup (StrictMode re-run)
+    return () => clearTimeout(t);
+  }, [viewingAge, bulkFetch]);
 
   // Fetch the next batch for a channel once its current batch is fully watched
   const refill = useCallback(async (chId: string, watchedNow: Set<string>) => {

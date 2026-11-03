@@ -22,6 +22,7 @@ export const KEYS = {
   stars:      'kj_stars',    // number
   streak:     'kj_streak',   // { count, lastDay: 'YYYY-MM-DD' }
   mastered:   'kj_mastered', // string[] — channelIds whose batch was fully watched
+  poolVersion: 'kj_poolVersion', // bump POOL_VERSION in JourneyProvider to force a re-fetch
   bulkDone:   (ageId: string) => `kj_bulkDone_${ageId}`,
   pool:       (chId: string)  => `kj_pool_${chId}`,      // Video[] (legacy: string[])
   nextToken:  (chId: string)  => `kj_nextToken_${chId}`,
