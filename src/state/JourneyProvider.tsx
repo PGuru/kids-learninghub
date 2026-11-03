@@ -33,8 +33,9 @@ function readPool(chId: string): Pool | null {
 
 // v2: pools are filtered for livestreams and >1h videos.
 // v3: re-curated catalogue (docs/channel-curation.md) — several old channel IDs were wrong.
+// v4: square ≤3-min videos are Shorts too; v3 caches let some through.
 // Older caches are dropped once so they re-fetch; watched/stars/history are untouched.
-const POOL_VERSION = 3;
+const POOL_VERSION = 4;
 
 // Every cached pool/page token, including channels no longer in the catalogue
 function storedPoolKeys(): string[] {

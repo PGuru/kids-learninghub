@@ -47,7 +47,7 @@ Built with **React 19 + TypeScript + Vite**. It is a client-only single-page app
 1. `channels?part=contentDetails` finds the channel's **uploads playlist**.
 2. `playlistItems?part=snippet,status&maxResults=25` fetches the videos, continuing from a stored `nextPageToken` when one exists.
 3. The results are filtered to public, non-deleted, English-language videos.
-4. `videos?part=snippet,contentDetails,player` drops **Shorts** (vertical videos of 3 minutes or less, anything 60 seconds or under, and #shorts titles), livestreams, upcoming premieres and anything over 1 hour, because a child can't "finish" those. If a page of uploads has too few watchable videos, it reads up to 4 pages to find 12.
+4. `videos?part=snippet,contentDetails,player` drops **Shorts** (vertical or square videos of 3 minutes or less, anything 60 seconds or under, and #shorts titles), livestreams, upcoming premieres and anything over 1 hour, because a child can't "finish" those. If a page of uploads has too few watchable videos, it reads up to 4 pages to find 12.
 
 That is about **3 quota units per channel fetch**, or up to 9 for channels that post mostly Shorts.
 

@@ -39,12 +39,13 @@ interface VideoDetails {
   player?: { embedWidth?: string | number; embedHeight?: string | number };
 }
 
-// The API has no "is a Short" flag. Shorts are vertical and ≤3 min; very short clips and
-// #shorts-tagged uploads count too.
+// The API has no "is a Short" flag. Shorts are vertical or square and ≤3 min; very short
+// clips and #shorts-tagged uploads count too. (With maxWidth=480, a 16:9 video embeds at
+// 480×270 while vertical and square ones come back at least as tall as they are wide.)
 function isShort(v: VideoDetails, secs: number): boolean {
   const w = Number(v.player?.embedWidth), h = Number(v.player?.embedHeight);
-  const vertical = w > 0 && h > w;
-  return secs <= 60 || (vertical && secs <= SHORTS_MAX_SECONDS) || /#shorts?\b/i.test(v.snippet?.title ?? '');
+  const notLandscape = w > 0 && h >= w;
+  return secs <= 60 || (notLandscape && secs <= SHORTS_MAX_SECONDS) || /#shorts?\b/i.test(v.snippet?.title ?? '');
 }
 
 /**

@@ -287,7 +287,7 @@ The **Biology, Physics, Chemistry, Anatomy**, **Engineering, Computer Science, S
 | 11–13 | Nature | Snake Discovery `UCnIrLy19cFV50Eai8Xj-ArA`, PBS Eons `UCzR-rom72PHN9Zg7RML9EbA`, MinuteEarth `UCeiYXex_fwgYDonaTcSIk6w` |
 | 14–16 | Reading & Language, Music, Soft Skills | Nothing well-endorsed and active was found. |
 | 14–16 | Stronger maths and engineering | Eddie Woo `UCq0EGvLTyy-LLT1oUSO_0FQ`, Practical Engineering `UCMOqf8ab-42UUQIdVoKwjlQ`, Socratica `UCW6TXMZ5Pq6yL6_k5NZ2e0Q` |
-| All | Shorts | **Fixed:** the app now filters out Shorts (vertical videos of 3 minutes or less, anything 60 seconds or under, and #shorts titles), and reads up to 4 pages of uploads to find 12 watchable videos. Fallback video IDs were checked, and the 24 Shorts among them were swapped for regular videos. Shorts-heavy channels such as Mark Rober and Numberblocks will show fewer, older videos. |
+| All | Shorts | **Fixed:** the app now filters out Shorts (vertical or square videos of 3 minutes or less, anything 60 seconds or under, and #shorts titles), and reads up to 4 pages of uploads to find 12 watchable videos. Fallback video IDs were checked, and the 24 Shorts among them were swapped for regular videos. Shorts-heavy channels such as Mark Rober and Numberblocks will show fewer, older videos. |
 | 14–16 | Media Literacy | MediaWise was removed because it posts only Shorts. Crash Course's "Navigating Digital Information" series is the best alternative. |
 
 ## Key sources
